@@ -48,35 +48,35 @@ $title = $nodes->item(0)->nodeValue;
 $ext = explode(",", $title);
 if(substr($ext[1], 7, 1)=="("){print "error"; exit();}
 include "mysql.php";
-print "BEGIN:VCALENDAR\n";
-print "VERSION:2.0\n";
-print "PRODID:-//EMILBA.CH//LECTIO//EN//"."\n";
+print "BEGIN:VCALENDAR\r\n";
+print "VERSION:2.0\r\n";
+print "PRODID:-//EMILBA.CH//LECTIO//EN//"."\r\n";
 # print "X-PUBLISHED-TTL:PT1H";
-# print floor(date("i")/15)."\n";
+# print floor(date("i")/15)."\r\n";
 if(floor(date("i")/15)==0){
 	$min = "00";
 }else{
 	$min = floor(date("i")/15)*15;
 }
-#print date("Y/m/d H:".$min)."\n";x
-print "LAST-MODIFIED:".date("Ymd\THis\Z",strtotime(date("Y/m/d H:".$min))-3600)."\n";
-print "X-PUBLISHED-TTL:PT15M"."\n";
-print "X-WR-CALNAME:Lectio skema"."\n";
+#print date("Y/m/d H:".$min)."\r\n";x
+print "LAST-MODIFIED:".date("Ymd\THis\Z",strtotime(date("Y/m/d H:".$min))-3600)."\r\n";
+print "X-PUBLISHED-TTL:PT15M"."\r\n";
+print "X-WR-CALNAME:Lectio skema"."\r\n";
 foreach($lesson as $l){
 	if(isset($_GET["cancelled"]) OR !(isset($l->status))){
-		print "BEGIN:VEVENT"."\n";
-		print "UID:".$l->uid."@emilba.ch"."\n";
-		print "SEQUENCE:".$sequence."\n";
-		if(isset($l->status)) print "STATUS:".$l->status."\n";
-		print "DTSTAMP:".gmdate('Ymd').'T'. gmdate('His')."Z"."\n";
-		print "DTSTART:".$l->start."\n";
-		print "DTEND:".$l->end."\n";
-		print "SUMMARY:".html_entity_decode($l->summary)."\n";
-		print "LOCATION:".$l->classroom."\n";
-		if($l->desc!=NULL) print "DESCRIPTION:".html_entity_decode($l->desc)."\n";
+		print "BEGIN:VEVENT"."\r\n";
+		print "UID:".$l->uid."@emilba.ch"."\r\n";
+		print "SEQUENCE:".$sequence."\r\n"; //This is important, to push updates
+		if(isset($l->status)) print "STATUS:".$l->status."\r\n";
+		print "DTSTAMP:".gmdate('Ymd').'T'. gmdate('His')."Z"."\r\n";
+		print "DTSTART:".$l->start."\r\n";
+		print "DTEND:".$l->end."\r\n";
+		print "SUMMARY:".html_entity_decode($l->summary)."\r\n";
+		print "LOCATION:".$l->classroom."\r\n";
+		if($l->desc!=NULL) print "DESCRIPTION:".addcslashes(addcslashes(html_entity_decode($l->desc),","),";")."\r\n";
 		//print "URL:".$l->url."\n";
-		print "END:VEVENT"."\n";
+		print "END:VEVENT"."\r\n";
 	}
 }
-print "END:VCALENDAR"."\n";
+print "END:VCALENDAR"."\r\n";
 ?>
