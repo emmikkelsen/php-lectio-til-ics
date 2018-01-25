@@ -71,7 +71,7 @@ if(floor(date("i")/15)==0){
 	$min = floor(date("i")/15)*15;
 }
 #print date("Y/m/d H:".$min)."\r\n";x
-print "LAST-MODIFIED:".date("Ymd\THis\Z",strtotime(gmdate("Y/m/d H:".$min)))."\r\n";
+print "LAST-MODIFIED:".gmdate("Ymd\THis\Z")."\r\n";
 print "X-PUBLISHED-TTL:PT15M"."\r\n";
 print "X-WR-CALNAME:Lectio skema"."\r\n";
 foreach($lesson as $l){
