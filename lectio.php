@@ -1,11 +1,22 @@
 <?php
-require_once('class.lesson.php');
-date_default_timezone_set("Europe/Copenhagen");
+
+// Uncomment following line to open in calendar program by default
 #header('Content-type: text/calendar, charset=UTF-8');
+
+// Specification for ics specifies that sequence should increment when events change
+$sequence = time();
+// WRITE DOMAIN HERE
+$domain = "example.com";
+
+
+
+
+require_once('class.lesson.php');
+libxml_use_internal_errors(true);
+date_default_timezone_set("Europe/Copenhagen");
+
 header('Cache-Control: max-age=7200, private, must-revalidate');
-if($_GET['elev']=="3324951786"){
-	exit();
-}
+
 function search($arr,$attr){
 	foreach ($arr as $key=>$line) {
 		$word=explode(" ",$line,2);
@@ -28,6 +39,7 @@ while($w<$weeks){
 	$dom = new DomDocument();
 	
 	if($_GET['type']=='elev') $dom->loadHTMLFile("http://www.lectio.dk/lectio/$school/SkemaNy.aspx?type=elev&elevid=$id&week=$week");
+
 	else $dom->loadHTMLFile("http://www.lectio.dk/lectio/$school/SkemaNy.aspx?type=laerer&laererid=$id&week=$week");
 	
 	$finder = new DomXPath($dom);
@@ -39,7 +51,7 @@ while($w<$weeks){
 		$elements[]=$nodes->item($i);
 	}
 	foreach($elements as $el){
-		$lesson[]=new lesson($el->getAttribute('title'),$el->getAttribute('href'));
+		$lesson[]=new lesson($el->getAttribute('data-additionalinfo'),$el->getAttribute('href'));
 	}
 	$w++;
 }
@@ -47,7 +59,7 @@ $nodes = $dom->getElementsByTagName('title');
 $title = $nodes->item(0)->nodeValue;
 $ext = explode(",", $title);
 if(substr($ext[1], 7, 1)=="("){print "error"; exit();}
-include "mysql.php";
+
 print "BEGIN:VCALENDAR\r\n";
 print "VERSION:2.0\r\n";
 print "PRODID:-//EMILBA.CH//LECTIO//EN//"."\r\n";
@@ -59,13 +71,13 @@ if(floor(date("i")/15)==0){
 	$min = floor(date("i")/15)*15;
 }
 #print date("Y/m/d H:".$min)."\r\n";x
-print "LAST-MODIFIED:".date("Ymd\THis\Z",strtotime(date("Y/m/d H:".$min))-3600)."\r\n";
+print "LAST-MODIFIED:".date("Ymd\THis\Z",strtotime(gmdate("Y/m/d H:".$min)))."\r\n";
 print "X-PUBLISHED-TTL:PT15M"."\r\n";
 print "X-WR-CALNAME:Lectio skema"."\r\n";
 foreach($lesson as $l){
 	if(isset($_GET["cancelled"]) OR !(isset($l->status))){
 		print "BEGIN:VEVENT"."\r\n";
-		print "UID:".$l->uid."@emilba.ch"."\r\n";
+		print "UID:".$l->uid."@".$domain."\r\n";
 		print "SEQUENCE:".$sequence."\r\n"; //This is important, to push updates
 		if(isset($l->status)) print "STATUS:".$l->status."\r\n";
 		print "DTSTAMP:".gmdate('Ymd').'T'. gmdate('His')."Z"."\r\n";
