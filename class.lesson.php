@@ -34,7 +34,6 @@ class Lesson {
 
 	##TIME
 		$time = explode(" ",$x[0]); //As the date is always on line 0
-		print "\n\n";
 		$date = $time[0]; //date as dd/mm-yyyy
 		$start = $time[1]; //time as hh:mm
 		$end = $time[3];
