@@ -46,7 +46,7 @@ class Lesson {
 		if (search($x,"L&#230;rer:")) {
 			$row = explode(" ",$x[search($x,"L&#230;rer:")]);
 			$this->teacher=str_replace(array(chr(13),"(",")"),"",end($row));
-		} elseif(search($x,"L&#230;rere:")) {
+		} elseif (search($x,"L&#230;rere:")) {
 			$row = explode(" ",$x[search($x,"L&#230;rere:")],2);
 			$this->teacher=str_replace(array(chr(13),","),"",end($row));
 		} else {
@@ -55,10 +55,10 @@ class Lesson {
 
 
 	##ROOM
-		if(search($x,"Lokale:")) {
+		if (search($x,"Lokale:")) {
 			$row = explode(" ",$x[search($x,"Lokale:")],2);
 			$this->classroom=str_replace(array(chr(13),","),"",end($row));
-		} elseif(search($x,"Lokaler:")) {
+		} elseif (search($x,"Lokaler:")) {
 			$row = explode(" ",$x[search($x,"Lokaler:")],2);
 			$this->classroom=str_replace(array(chr(13),","),"",end($row));
 		} else {
@@ -116,7 +116,7 @@ class Lesson {
 				array_pop($y);
 			}
 			/*foreach ($y as $key => $value) { //remove the linebreak at end of note ONLY if it exists // Not necessary
-				if(substr($value, 0,-1).chr(13)==$value){
+				if (substr($value, 0,-1).chr(13)==$value){
 					$y[$key]=substr($value, 0,-1);
 				}
 			}*/
@@ -162,7 +162,7 @@ class Lesson {
 					$this->desc.="$value";
 				}
 			}
-		} elseif(!(search($x,"Note:") OR search($x,"Lektier:"))){ // None present
+		} elseif (!(search($x,"Note:") OR search($x,"Lektier:"))) { // None present
 			$this->desc=NULL;
 		} elseif (search($x,"Lektier:")) {
 			foreach ($this->homework as $key => $value) {
@@ -174,9 +174,9 @@ class Lesson {
 			}
 		} elseif (search($x,"Note:")) {
 			foreach ($this->notes as $key => $value) {
-				if(@$this->notes[$key+1]){
+				if (@$this->notes[$key+1]){
 					$this->desc.="$value\\n\\n";
-				}else{
+				} else {
 					$this->desc.="$value";
 				}
 			}
